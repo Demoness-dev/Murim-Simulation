@@ -1,0 +1,7 @@
+{
+    "Wooden Sword": {
+        "name": "Wooden Sword",
+        "damage": 100,
+        "damage_buff": 1
+    }
+}

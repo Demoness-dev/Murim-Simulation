@@ -1,0 +1,15 @@
+[2025-05-09 11:21:17] : [INFO] - Jing Rong joined the sect Ghost Sun Sect as a Sect Elder.
+[2025-05-09 11:21:17] : [INFO] - Jing Chao joined the sect Ghost Sun Sect as a Sect Elder.
+[2025-05-09 11:21:17] : [INFO] - Feng Hong joined the sect Ghost Sun Sect as a Sect Elder.
+[2025-05-09 11:21:17] : [INFO] - Guang Tian joined the sect Ghost Sun Sect as a Sect Elder.
+[2025-05-09 11:21:17] : [INFO] - a5435ab7-4cb8-46ff-904c-68919fe2cad5 created between Jing Rong and Jing Chao.
+[2025-05-09 11:21:17] : [INFO] - 9c3d27d6-53fd-439e-95e3-4b72c055c26c created between Feng Hong and Guang Tian.
+[2025-05-09 11:21:17] : [INFO] - Starting a5435ab7-4cb8-46ff-904c-68919fe2cad5 between Jing Rong and Jing Chao.
+[2025-05-09 11:21:17] : [INFO] - A Battle has ended ID: BATTLE-6205935f-3d4a-4e10-8f18-8b8ed789bc93 and Jing Rong was defeated.
+[2025-05-09 11:21:17] : [INFO] - Starting 9c3d27d6-53fd-439e-95e3-4b72c055c26c between Feng Hong and Guang Tian.
+[2025-05-09 11:21:17] : [INFO] - A Battle has ended ID: BATTLE-2b178ba6-3377-4b39-be61-c086908663da and Guang Tian was defeated.
+[2025-05-09 11:21:18] : [INFO] - cd6293f2-156c-4753-90cd-0f302677c39c created between Jing Chao and Feng Hong.
+[2025-05-09 11:21:18] : [INFO] - Starting cd6293f2-156c-4753-90cd-0f302677c39c between Jing Chao and Feng Hong.
+[2025-05-09 11:21:18] : [INFO] - A Battle has ended ID: BATTLE-bc9c84e5-d1dd-4bbd-834d-0a40ad03218c and Feng Hong was defeated.
+[2025-05-09 11:21:18] : [INFO] - Jing Chao is the final winner of the tournament.
+[2025-05-09 11:21:18] : [INFO] - Jing Chao has been chosen as the new leader of Ghost Sun Sect.

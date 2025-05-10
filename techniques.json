@@ -1,0 +1,54 @@
+{
+        "Palm Strike": {
+            "name": "Palm Strike",
+            "type": "attack",
+            "cost": 20,
+            "power": 20,
+            "tier": 1,
+            "effect": "None",
+            "element": "earth",
+            "buff type": "None"
+        },
+        "Ironwall Shoulder": {
+            "name": "Ironwall Shoulder",
+            "type": "defense",
+            "cost": 15,
+            "power": 15,
+            "tier": 1,
+            "effect": "None",
+            "element": "metal",
+            "buff type": "None"
+        },
+        "Minimal Vein Reconstruction": {
+            "name": "Minimal Vein Reconstruction",
+            "type": "support",
+            "cost": 15,
+            "power": 20,
+            "tier": 1,
+            "effect": 1,
+            "element": "water",
+            "buff type": "None"
+        },
+        
+        "Vein Restauration": {
+            "name": "Vein Restauration",
+            "type": "support",
+            "cost": 10,
+            "power": 13,
+            "tier": 1,
+            "effect": 2,
+            "element": "water",
+            "buff type": 5
+        },
+
+        "Heavenly Demon Sword Art #1": {
+            "name": "Heavenly Demon Sword Art #1",
+            "type": "attack",
+            "cost": 24000,
+            "power": 27000,
+            "tier": 10,
+            "effect": 1,
+            "element": "fire",
+            "buff_type": "None"
+        }
+}

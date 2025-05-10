@@ -1,0 +1,80 @@
+{
+    "Town Hall": {
+        "Name": "Town Hall",
+        "Building Levels": [1, 2, 3, 4],
+        "Income": "Spirit Stones",
+        "Income Quantity": 300,
+        "Specific Function": "Town_hall",
+        "Region Needs": "None",
+        "Build Needs": "None",
+        "Settlement Type": "City",
+        "Build Cost": {},
+        "Current Level": 1,
+        "Build Effects": "None"
+    },
+    "Blacksmith": {
+        "Name": "Blacksmith",
+        "Building Levels": [1, 2, 3],
+        "Income": "War Supply",
+        "Income Quantity": 100,
+        "Specific Function": "Blacksmith",
+        "Region Needs": "Steel",
+        "Build Needs": ["Wood Workshop", "Steel Mines", "Town Hall"],
+        "Settlement Type": "City",
+        "Build Cost": {"Spirit Stones": 200, "Normal Supply": 800},
+        "Current Level": 1,
+        "Build Effects": "None"
+    },
+    "Test Build": {
+        "Name": "Debug Build",
+        "Building Levels": [1, 2, 3],
+        "Income": "Spirit Stones",
+        "Income Quantity": 1,
+        "Specific Function": "None",
+        "Region Needs": "0",
+        "Build Needs": ["Town Hall"],
+        "Settlement Type": "City",
+        "Build Cost": {"Spirit Stones":1,"Normal Supply":1},
+        "Current Level": 1,
+        "Build Effects": "None"
+    },
+    "Sect Hall": {
+        "Name": "Sect Hall",
+        "Building Levels": [1, 2, 3, 4],
+        "Income": "Spirit Stones",
+        "Income Quantity": 300,
+        "Specific Function": "Sect_hall",
+        "Region Needs": "None",
+        "Build Needs": "None",
+        "Settlement Type": "Sect",
+        "Build Cost": {},
+        "Current Level": 1,
+        "Build Effects": "None"
+    },
+    "Marketplace":{
+        "Name": "Marketplace",
+        "Building Levels": [1, 2, 3],
+        "Income": "Spirit Stones",
+        "Income Quantity": 500,
+        "Specific Function": "Marketplace",
+        "Region Needs": "None",
+        "Build Needs": ["Town Hall"],
+        "Settlement Type": "City",
+        "Build Cost": {"Spirit Stones": 200, "Normal Supply": 800},
+        "Current Level": 1,
+        "Build Effects": "None"
+    },
+    "Training Hall": {
+        "Name": "Training Hall",
+        "Building Levels": [1, 2, 3, 4],
+        "Income": "Cultivation Supply",
+        "Income Quantity": 100,
+        "Specific Function": "training_hall",
+        "Region Needs": "None",
+        "Build Needs": ["Sect Hall"],
+        "Settlement Type": "Sect",
+        "Build Cost": {},
+        "Current Level": 1,
+        "Build Effects": "train_facility_quality"
+    }
+}
