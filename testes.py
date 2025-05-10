@@ -1,14 +1,11 @@
 from martial_artist_definition import MartialArtist
-from node_map import Map
+from node_map import NodeMap
 from battle_manager import *
 from initializer import *
-from trade_system import CityTradeSystem
 from sect import Sect
+from globals import regions
 full_load()
 
-
-test_map = Map(regions["Heavenly Jade Plains"])
-test_trade_system = CityTradeSystem(test_map)
-sect = Sect(test_map, test_trade_system)
-
+test_trading_system = 1
+test_map = NodeMap("Test Map", test_trading_system)
 

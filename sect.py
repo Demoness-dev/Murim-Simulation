@@ -1,10 +1,9 @@
 import random
 from console_writer import log
 from logger import logger
-from node_map import load_json, BUILD_SLOTS
 from martial_artist_definition import MARTIAL_WORLD_LIST, MartialArtist
 from battle_manager import manage_brackets, create_battle_instance
-from globals import SECT_WORLD_LIST
+from globals import SECT_WORLD_LIST, load_json, BUILD_SLOTS
 
 class Sect:
     def __init__(self, map, trade_system, sect_leader:MartialArtist = None, sect_members:dict = None):

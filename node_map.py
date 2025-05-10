@@ -1,16 +1,19 @@
 from sect import Sect
 from city import City
+from globals import regions
 import random
 from console_writer import log
 from martial_artist_definition import MartialArtist
-class Map:
+class NodeMap:
     def __init__(self, name, trade_system, x=10, y=10):
         self.map_name = name
         self.nodes = {}
+        self.nodes_region_type = {} #Each node will have a region modifier anexed with its coord.
         self.nodes_routes = {}
         self.grid_size = {"x": x, "y": y}
         self.trade_system = trade_system
         self.objects = {}
+        self.regions = regions
 
     def add_node_coord(self, node: object, x=None, y=None) -> None:
         if len(self.nodes) >= self.grid_size["x"] * self.grid_size["y"]:
@@ -20,16 +23,25 @@ class Map:
         x_coords = random.randint(0, self.grid_size["x"] - 1) if x is None else x
         y_coords = random.randint(0, self.grid_size["y"] - 1) if y is None else y
 
-        while (x_coords, y_coords) in self.nodes:
-            x_coords = random.randint(0, self.grid_size["x"] - 1)
-            y_coords = random.randint(0, self.grid_size["y"] - 1)
+        coords = self.find_unique_coord(self.nodes, x_coords, y_coords)
 
-        self.nodes[(x_coords, y_coords)] = node
+        self.nodes[(coords[0], coords[1])] = node
         node.set_coords(x_coords, y_coords)
 
     def time_node_check(self) -> None:
         for node in self.nodes.values():
             node.nearby_nodes = self.check_nearby_nodes(node)
+
+    def create_region_object(self, region_object:dict) -> None:
+        if len(self.nodes_region_type) >= self.grid_size["x"] * self.grid_size["y"]:
+            log.error("Map is full. Cannot add more region objects.")
+            return
+        x_coords = random.randint(0, self.grid_size["x"] - 1)
+        y_coords = random.randint(0, self.grid_size["y"] - 1)
+        
+        coords = self.find_unique_coord(self.nodes_region_type, x_coords, y_coords)
+        
+        self.nodes_region_type[(coords[0], coords[1])] = self.regions[region_object["Region Name"]]
 
     def create_city(self) -> None:
         new_city = City(self, self.trade_system)
@@ -46,8 +58,9 @@ class Map:
     def create_martial_artist(self, sect=None, coords:tuple = None) -> None:
         new_artist = MartialArtist(self, self.trade_system, sect)
         new_artist.position = coords if coords else self.generate_martial_coords()
+        log.info(f"Custom martial artist {new_artist}({new_artist.name}) created at {new_artist.position}")
         
-    def generate_martial_coords(self, sect:Sect = None):
+    def generate_martial_coords(self, sect:Sect = None) -> tuple:
         if sect and sect in self.nodes.values():
             return sect.coords
         if sect not in self.nodes.values():
@@ -123,7 +136,7 @@ class Map:
         else:
             log.info(f"Route already exists between {node1.city_name} and {node2.city_name}.")
 
-    def get_node(self, coords: tuple):
+    def get_node(self, coords: tuple) -> tuple:
         if coords in self.nodes:
             return self.nodes[coords]
         else:
@@ -141,3 +154,9 @@ class Map:
         if distance <= 2:
             artist.position = new_coords
             log.info(f"Artist {artist.name} moved to coordinates {new_coords}.")
+    
+    def find_unique_coord(self, node_dict:dict, x_coords, y_coords) -> tuple :
+        while (x_coords, y_coords) in node_dict:
+            x_coords = random.randint(0, self.grid_size["x"] - 1)
+            y_coords = random.randint(0, self.grid_size["y"] - 1)
+        return (x_coords, y_coords)

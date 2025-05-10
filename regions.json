@@ -2,6 +2,11 @@
     "Heavenly Jade Plains": {
         "Region Name": "Heavenly Jade Plains",
         "Availables": ["Spirit Herbs", "Jade", "Steel"],
-        "Region Size": 100
+        "Quality": 10
+    },
+    "Mountains":{
+        "Region Name": "Mountains",
+        "Availables": ["Spirit Herbs", "Steel", "Gold"],
+        "Quality": 5
     }
 }
