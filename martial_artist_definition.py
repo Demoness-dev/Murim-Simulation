@@ -30,8 +30,6 @@ class MartialArtist:
         else:
             logger.execute("Dictionary Error", "erro", "'Realm' dict doens't have any data.")
             self.qi = 100
-            
-            
         self.vitality = self.base_vitality * self.constitution * self.realm['Multiplier']
 
         self.max_qi = self.qi
@@ -94,11 +92,9 @@ class MartialArtist:
         return first_name, last_name, full_name 
 
     def _spawn_random_location(self):
-        while True:
-            x = random.randint(0, self.map.grid_size - 1)
-            y = random.randint(0, self.map.grid_size - 1)
-            if (x, y) not in self.map.objects.values():
-                return (x, y)
+        x = random.randint(0, self.map.grid_size["x"] - 1)
+        y = random.randint(0, self.map.grid_size["y"] - 1)
+        return (x, y) 
 
     def health_status(self):
         vitality_percent = int((self.max_vitality / self.vitality) * 100)
@@ -140,7 +136,7 @@ class MartialArtist:
     @property
     def age(self):
         if self._age >= self.realm['Age Limit']:
-            log.info(f"{self.name} died of old age.")
+            log.info(f"{self}({self.name}) died of old age.")
             self.delete()
         return 18 + self.relative_time_passed // 100
     
@@ -155,8 +151,8 @@ class MartialArtist:
             del self
             gc.collect()
         else:
-            log.warning(f"Attempted to delete {self.name}, but they were not found.")
-            logger.execute("object not found", "erro", f"{self.name} tried to delete itself but this object don't exist in the World List.")
+            log.warning(f"Attempted to delete {self}({self.name}), but they were not found.")
+            logger.execute("object not found", "erro", f"{self}({self.name}) tried to delete itself but this object don't exist in the World List.")
     def get_stat(self, stat):
         return getattr(self, stat)
 
@@ -164,7 +160,7 @@ class MartialArtist:
         if hasattr(self, stat):
             setattr(self, stat, value)
         else:
-            logger.execute("Attribute error", "erro", f"An unknow object tried to define a non existent attribute.")
+            logger.execute("Attribute error", "erro", f"the object {self}({self.name}) tried to define a non existent attribute.")
     
     def _load_realms(self, filename="realms_list.json"):
         try:
@@ -201,20 +197,20 @@ class MartialArtist:
         fc_level = facility_quality if facility_quality else 1
         if self.max_qi < self.qi:
             self.max_qi = min(self.qi, (((self.max_qi + 200) + (fc_level)) + (self.wisdom * self.constitution)) * duration)
-            log.info(f"{self.name} was successfuly healed.")
+            log.info(f"{self}({self.name}) was successfuly healed.")
             self.pass_time(duration)
         elif self.max_vitality < self.vitality:
             self.max_vitality = min(self.vitality, ((self.max_vitality * fc_level/10) + self.constitution * self.strength) * duration)
-            log.info(f"{self.name} was successfuly healed.")
+            log.info(f"{self}({self.name}) was successfuly healed.")
         else:
-            log.info(f"{self.name} tried to heal when they is already at full health.")
+            log.info(f"{self}({self.name}) tried to heal when they is already at full health.")
             return
         
     def train(self, stat, facility_quality = None, duration = 1):
         fc_level = facility_quality if facility_quality else 1
         training_supress = 1
         if self.max_qi <= self.operational_qi:
-            log.info(f"{self.name} doens't have enough Qi to train.")
+            log.info(f"{self}({self.name}) doens't have enough Qi to train.")
             return
         elif self.injured == True:
             training_supress = 0.8
@@ -225,23 +221,23 @@ class MartialArtist:
         self.update_qi()
         self.update_vitality()
         self.pass_time(duration*5)
-        log.info(f"{self.name} successfully trained and advanced them stats {stat.upper()}: {previous_value} to {stat.upper()}: {self.get_stat(stat)} in {duration} unit of time")
+        log.info(f"{self}({self.name}) successfully trained and advanced them stats {stat.upper()}: {previous_value} to {stat.upper()}: {self.get_stat(stat)} in {duration} unit of time")
 
     def cultivate(self, facility_quality = None, duration = 1, cultivation_supplies = None):
         fc_level = facility_quality if facility_quality else 1
         quantity_cultivation = cultivation_supplies if cultivation_supplies else 1
         if self.max_qi <= self.operational_qi:
-            log.info(f"{self.name} doens't have enough Qi to cultivate.")
+            log.info(f"{self}({self.name}) doens't have enough Qi to cultivate.")
             return
         elif self.cultivation_blocked == True:
-            log.info(f"{self.name} can't cultivated because is blocked.")
+            log.info(f"{self}({self.name}) can't cultivated because is blocked.")
             return
         progress_gain = self.talent * (self.wisdom + self.intelligence) / 2 * fc_level * quantity_cultivation
         progress_gain += max(1, duration/2)
         self.set_stat("base_qi", int(self.get_stat("base_qi")) + round(progress_gain))
         self.update_vitality()
         self.update_qi()
-        log.info(f"{self.name} has cultivated successfully. (New Value: {self.qi})")
+        log.info(f"{self}({self.name}) has cultivated successfully. (New Value: {self.qi})")
         self.check_for_breakthrough()
         self.pass_time(duration)
 
@@ -249,13 +245,13 @@ class MartialArtist:
         learn_rate = max(1, self.talent * self.wisdom / 100)
         duration_prediction = technique["Learn Difficulty"] / learn_rate
         if duration_prediction > 100:
-            log.info(f"{self.name} tried to learn a technique that they have not good aptitude.")
+            log.info(f"{self}({self.name}) tried to learn a technique that they have not good aptitude.")
             return
         else:
             self.pass_time(duration_prediction)
             self.set_stat("max_qi", min(1000, self.max_qi / (duration_prediction/2)))
             self.techniques[technique["Name"]] = technique 
-            log.info(f"{self.name} learned a new tech. take it at all {duration_prediction} units of time.")
+            log.info(f"{self}({self.name}) learned a new tech. take it at all {duration_prediction} units of time.")
 
     def pass_time(self, duration):
         self.relative_time_passed += duration
@@ -272,7 +268,7 @@ class MartialArtist:
             return
     
     def breakthrough(self, next_realm, realm_name):
-        log.info(f"{self.name} successfully advanced to the next realm ({self.cultivation_realm} - {realm_name})")
+        log.info(f"{self}({self.name}) successfully advanced to the next realm ({self.cultivation_realm} - {realm_name})")
         self.change_realm(next_realm, realm_name)
 
     def full_Qi(self):
@@ -280,7 +276,7 @@ class MartialArtist:
         self.qi = 50000000
         
     def die(self, cause="Unknown"):
-        log.info(f"{self.name} died. [Cause of Death: {cause}]")
+        log.info(f"{self}({self.name}) died. [Cause of Death: {cause}]")
         self.delete()
     def has_lover(self):
         return any(rel["deepness"] == "lover" for rel in self.relations.values())
@@ -314,7 +310,7 @@ class MartialArtist:
         else:
             self.relations[target.name] = {"deepness": "stranger", "intensity": self.charisma, "object": target}
             target.relations[self.name] = {"deepness": "stranger", "intensity": self.charisma, "object": self}
-            log.info(f"{self.name} and {target.name} were made {self.relations[target.name]['deepness']}s.")
+            log.info(f"{self}({self.name}) and {target}({target.name}) were made {self.relations[target.name]['deepness']}s.")
             return
         
         intensity = relation_id['intensity']
@@ -331,12 +327,12 @@ class MartialArtist:
             if lover_flag and other_lover_flag:
                 new_deepness = "best friend"
             else:
-                log.info(f"{self.name} now is in love with {target.name}")
+                log.info(f"{self}({self.name}) now is in love with {target}({target.name})")
 
         relation_id['deepness'] = new_deepness
         relation_id_other["deepness"] = new_deepness
         
-        log.info(f"{self.name} and {target.name} are {new_deepness}s (Intensity: {intensity})")
+        log.info(f"{self}({self.name}) and {target}({target.name}) are {new_deepness}s (Intensity: {intensity})")
     
     def get_lover(self):
         for name, relation in self.relations.items():
@@ -351,11 +347,9 @@ class MartialArtist:
         if self.gender == "Female":
             self.pass_time(100)
             child = MartialArtist(self.map, father = partner, mother = self)
-            log.info(f"{self.name} and {partner.name} successfully gave birth to a child! ({child.name})")
+            log.info(f"{self}({self.name}) and {partner}({partner.name}) successfully gave birth to a child! {child}({child.name})")
             return
-    def call_buy_item(self, city):
-        pass
-    
+        
     def get_tech_group(self, orientation):
         possible_techs = {}
         for t, i in self.techniques.items():
@@ -384,7 +378,7 @@ class MartialArtist:
                 if course_action == "obey" or course_action == "training" or course_action == "mock":
                     self.do_damage(damage_threshold)
                     damage = damage_threshold
-                logger.execute(f"Debug Battle Log {self.name} vs {origin.name}", "sucesso", f"A Hit with a power of {damage} (Real Damage: {real_damage}) hits {self.name} ({self.talent}), (technique: {attack_data["technique_origin"].name} origin: {origin.name}) ({origin.talent})")
+                logger.execute(f"Debug Battle Log {self}({self.name}) vs {origin}{origin.name}", "sucesso", f"A Hit with a power of {damage} (Real Damage: {real_damage}) hits {self}({self.name}) ({self.talent}), (technique: {attack_data["technique_origin"].name} origin: {origin}{origin.name}) ({origin.talent})")
             else:
                 log.error(f"Object {self}(Name: {self.name}) tried to use a technique with the wrong orientation in reaction.")
                 logger.execute("wrong instance", "erro", f"Object {self} with the name of {self.name} used a wrong technique instance when in reaction.")

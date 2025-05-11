@@ -3,7 +3,7 @@ from console_writer import log
 from logger import logger
 from martial_artist_definition import MARTIAL_WORLD_LIST, MartialArtist
 from battle_manager import manage_brackets, create_battle_instance
-from globals import SECT_WORLD_LIST, load_json, BUILD_SLOTS
+from globals import SECT_WORLD_LIST, load_json, GLOBAL_BUILD_OBJECTS
 
 class Sect:
     def __init__(self, map, trade_system, sect_leader:MartialArtist = None, sect_members:dict = None):
@@ -58,47 +58,6 @@ class Sect:
         self.sect_leader = winner
         self.sect_members[winner.name]["rank"] = "Sect Leader"
         
-    def load_builds(self):
-        builds = load_json()
-        sect_builds = {}
-        for build_name, build_info in builds.items():
-            if build_info["Settlement Type"] == "Sect":
-                sect_builds[build_name] = build_info
-        return sect_builds
-
-    def _get_possible_buildings(self):
-        possible_buildings = {}
-        builds = self.load_builds()
-        for build_name, build_info in builds.items():
-            build_needs = build_info.get("Build Needs", [])
-            if build_needs == "None":
-                build_needs = []
-            if build_info["Region Needs"] in self.region["Availables"]:
-                if all(req in self.build_slot for req in build_needs):
-                    possible_buildings[build_name] = build_info
-        return possible_buildings
-    
-    def build(self, build):
-        for resource_t, resource_v in build['Build Cost'].items():
-            if resource_t in self.resources.keys():
-                self.resources[resource_t] -= resource_v
-                self.build_slot.append(build['Name'])
-                build_eff = build['Build Effects'] if build["Build Effects"] else "None"
-                
-                if build_eff and build_eff != "None":
-                    if build_eff in self.build_buffs:
-                        self.build_buffs[build_eff] += build["Current Level"]
-                    else:
-                        self.build_buffs[build_eff] = build["Current Level"]
-        log.info(f"The Sect {self.city_name} just built {build['Name']}")
-        
-    def search_build(self, build_dict = BUILD_SLOTS):
-        found_buildings = {}
-        for slot in self.build_slot:
-            if slot in build_dict and build_dict[slot]["Settlement Type"] == "Sect":
-                found_buildings[slot] = build_dict[slot]
-        return found_buildings
-    
     def _income_manager(self):
         builds = self.search_build()
         for build_keys, build_values in builds.items():

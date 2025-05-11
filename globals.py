@@ -83,7 +83,8 @@ SECT_WORLD_LIST = {}
 SECT_BATTLE_LIST = {}
 GLOBAL_BATTLE_LOG = {}
 cities = {}
-BUILD_SLOTS = load_json()
+BUILD_SLOTS_DICT = load_json()
+GLOBAL_BUILD_OBJECTS = {}
 regions = load_json(filename="regions.json")
 techniques = load_json(filename="techniques.json")
 items = load_json(filename="items.json")

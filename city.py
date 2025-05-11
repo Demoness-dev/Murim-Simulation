@@ -1,8 +1,11 @@
-from globals import *
-
+from globals import cities, random, MARTIAL_WORLD_LIST, uuid, GLOBAL_BUILD_OBJECTS
+from console_writer import log
+from logger import logger
+from build import Building
+from copy import deepcopy
 class City:
     def __init__(self, region, trade_system, city_name = None):
-        self.city_id = len(cities) + 1
+        self.city_id = uuid.uuid4()
         self.trade_system = trade_system
         self.nearby_nodes = {}
         self.nearby_artists = {}
@@ -13,15 +16,47 @@ class City:
         self.resources_limit = {"Spirit Stones": 30000, "Cultivation Supply": 2000, "Normal Supply": 30000}
         self.resource_trigger = {}
         self.resource_per_unit = {"Spirit Stones": 1, "Cultivation Supply": 3, "Normal Supply": 1}
-        self.build_slot = ["Town Hall"]
+        self.build_slot = {}
         self.prosperity_rate = random.uniform(1,2)
         self.incomes = {"Spirit Stones": 500, "Cultivation Supply": 150, "Normal Supply": 1000}
         self.market_inventory = []
-        cities[self.city_name] = {"city": self, "region": self.region}
+        cities[self.city_id] = {"city": self, "region": self.region}
+        self.generate_hall()
 
     def set_coords(self, x, y):
         self.coords = (x, y)
         return 
+    
+    def assimilate_build(self, build:Building):
+        self.build_slot[build.name] = build
+        return
+    
+    def generate_hall(self):
+        burner_copy = deepcopy(GLOBAL_BUILD_OBJECTS["Town Hall"])
+        self.assimilate_build(burner_copy)
+        return
+    
+    def add_income(self, build:Building):
+        self.incomes.setdefault(build.income_t, 0)
+        self.incomes[build.income_t] += build.income_q
+        return
+    
+    def remove_income(self, build:Building):
+        if build.income_t in self.incomes:
+            self.incomes[build.income_t] -= build.income_q
+            return
+        return    
+    
+    def resource_manager(self):
+        for income_type, income_values in self.incomes.items():
+            self.resources[income_type] += income_values
+            if self.check_cap(income_type):
+                self.resources[income_type] = self.resources_limit[income_type]
+                return
+        return
+    
+    def check_cap(self, resource):
+        return True if self.resources[resource] >= self.resources_limit[resource] else False
     
     def generate_city_name(self):
         prefixes = ["Stone", "Iron", "Silver", "Gold", "Dark", "White", "Black", "Dragon",
@@ -38,51 +73,12 @@ class City:
             if name not in cities:
                 return name
             
-    def _get_possible_buildings(self, build_dict = BUILD_SLOTS):
-        possible_buildings = {}
-        builds = build_dict
-        for build_name, build_info in builds.items():
-            build_needs = build_info.get("Build Needs", [])
-            if build_needs == "None":
-                build_needs = []
-            if build_info["Region Needs"] in self.region["Availables"] and build_info["Settlement Type"] == "City":
-                if all(req in self.build_slot for req in build_needs):
-                    possible_buildings[build_name] = build_info
-        return possible_buildings
-    def search_build(self, build_dict = BUILD_SLOTS):
-        found_buildings = {}
-        for slot in self.build_slot:
-            if slot in build_dict and build_dict[slot]["Settlement Type"] == "City":
-                found_buildings[slot] = build_dict[slot]
-        return found_buildings
-    def _income_manager(self):
-        builds = self.search_build()
-        for build_keys, build_values in builds.items():
-            if build_values["Income"] == "None":
-                continue
-            self.incomes[build_values['Income']] += build_values['Income Quantity']
-        log.info(f"Monthly Income for {self.city_name}")
-    def resource_manager(self):
-        self._income_manager()
-        for resource_t in self.resources.keys():
-            if resource_t not in self.resources_limit:
-                self.resources_limit[resource_t] = self.incomes[resource_t] * 5
-                
-            self.resources[resource_t] = min(
-                self.resources[resource_t] + self.incomes[resource_t], 
-                self.resources_limit[resource_t]
-            )
-            self.resource_trigger[resource_t] = {
-                "Trigger": self.resources[resource_t] < self.resources_limit[resource_t] * 0.6,
-                "Resource Margin": max(0, self.resources_limit[resource_t] - self.resources[resource_t])
-            }
-        self.trade_system.manage_city_trades()
-    def build(self, build_slot):
-        for resource_t, resource_v in build_slot['Build Cost'].items():
-            if resource_t in self.resources.keys():
-                self.resources[resource_t] -= resource_v
-        self.build_slot.append(build_slot['Name'])
-        log.info(f"The City {self.city_name} just built {build_slot['Name']}")
+    def has_built(self, build_name:str) -> bool:
+        return True if build_name in self.build_slot.keys() else False
+    
+    def construct(self, build:dict):
+        pass
+            
     def zero_resources(self):
         """Intentionally sets all resources to 0 for testing purposes."""
         for resource in self.resources:
