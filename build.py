@@ -18,3 +18,6 @@ class Building:
         
     def append_to_dict(self):
         GLOBAL_BUILD_OBJECTS[self.name] = self
+    
+    def call_function(self):
+        pass

@@ -29,6 +29,9 @@ class City:
     def assimilate_build(self, build:Building):
         self.build_slot[build.name] = build
     
+    def remove_build(self, build:Building):
+        del self.build_slot[build.name]
+    
     def remove_resources(self, amount, resource):
         self.resources[resource] = max(0, (self.resources[resource] - amount))
 
@@ -58,11 +61,12 @@ class City:
             self.resources[income_type] += income_values
             if self.check_cap(income_type):
                 self.resources[income_type] = self.resources_limit[income_type]
-                
             if self.resource_trigger_check(income_type):
                 self.resource_trigger_manager(income_type)
     
     def check_cap(self, resource):
+        self.resources.setdefault(resource, 0)
+        self.resources_limit.setdefault(resource, 3000)
         return True if self.resources[resource] >= self.resources_limit[resource] else False
     
     def generate_city_name(self):
@@ -86,15 +90,27 @@ class City:
     def check_enough_resource(self, build:Building):
         return all(self.resources.get(res, 0) >= amount for res, amount in build.cost.items())
     
-    def construct(self, build:Building):
+    def unbuild(self, build:Building):
+        if build.name not in self.build_slot.keys():
+            log.error(f"{self.city_id}({self.name}) tried to delete a object that they don't have. {build}({build.name})")
+            return
+        self.remove_build(build)
+        self.add_resource(build.income_t, build.income_q * 0.30)
+        self.remove_income(build)
+        
+    def build(self, build:Building):
+        if build.settle_type != "City":
+            log.error(f"{build}({build.name}) is not a Settlement of the same type as the original object.")
+            return
         if self.check_enough_resource(build):
             self.assimilate_build(build)
+            self.add_income(build)
             for resource, amount in build.cost.items():
                 self.remove_resources(amount, resource)
             log.info(f"{build.name} successfully constructed in {self.name}")
         else:
             log.warning(f"Insufficient resources to construct {build.name} in {self.name}.")
-            
+    
     def zero_resources(self):
         """Intentionally sets all resources to 0 for testing purposes."""
         for resource in self.resources:
