@@ -11,7 +11,7 @@ class City:
         self.nearby_artists = {}
         self.region = region
         self.coords = None
-        self.city_name = city_name if city_name else self.generate_city_name()
+        self.name = city_name if city_name else self.generate_city_name()
         self.resources = {"Spirit Stones": min(30000, random.randint(10000, 30000)), "Cultivation Supply": min(2000, random.randint(1500, 2500)), "Normal Supply": min(28000, random.randint(12000, 30000))}
         self.resources_limit = {"Spirit Stones": 30000, "Cultivation Supply": 2000, "Normal Supply": 30000}
         self.resource_trigger = {}
@@ -24,36 +24,43 @@ class City:
         self.generate_hall()
 
     def set_coords(self, x, y):
-        self.coords = (x, y)
-        return 
+        return setattr(self, "coords", (x, y))
     
     def assimilate_build(self, build:Building):
         self.build_slot[build.name] = build
-        return
+    
+    def remove_resources(self, amount, resource):
+        self.resources[resource] = max(0, (self.resources[resource] - amount))
+
+    def add_resource(self, resource, amount):
+        self.resources[resource] = min(self.resources_limit[resource], (self.resources[resource] + amount))
     
     def generate_hall(self):
         burner_copy = deepcopy(GLOBAL_BUILD_OBJECTS["Town Hall"])
         self.assimilate_build(burner_copy)
-        return
     
     def add_income(self, build:Building):
         self.incomes.setdefault(build.income_t, 0)
         self.incomes[build.income_t] += build.income_q
-        return
-    
+        
     def remove_income(self, build:Building):
         if build.income_t in self.incomes:
             self.incomes[build.income_t] -= build.income_q
-            return
-        return    
+             
+    def resource_trigger_check(self, resource):
+        return True if self.resources[resource] <= self.resources_limit[resource] * 0.10 else False
+    
+    def resource_trigger_manager(self, resource):
+        pass #End Trade System First
     
     def resource_manager(self):
         for income_type, income_values in self.incomes.items():
             self.resources[income_type] += income_values
             if self.check_cap(income_type):
                 self.resources[income_type] = self.resources_limit[income_type]
-                return
-        return
+                
+            if self.resource_trigger_check(income_type):
+                self.resource_trigger_manager(income_type)
     
     def check_cap(self, resource):
         return True if self.resources[resource] >= self.resources_limit[resource] else False
@@ -76,19 +83,28 @@ class City:
     def has_built(self, build_name:str) -> bool:
         return True if build_name in self.build_slot.keys() else False
     
-    def construct(self, build:dict):
-        pass
+    def check_enough_resource(self, build:Building):
+        return all(self.resources.get(res, 0) >= amount for res, amount in build.cost.items())
+    
+    def construct(self, build:Building):
+        if self.check_enough_resource(build):
+            self.assimilate_build(build)
+            for resource, amount in build.cost.items():
+                self.remove_resources(amount, resource)
+            log.info(f"{build.name} successfully constructed in {self.name}")
+        else:
+            log.warning(f"Insufficient resources to construct {build.name} in {self.name}.")
             
     def zero_resources(self):
         """Intentionally sets all resources to 0 for testing purposes."""
         for resource in self.resources:
             self.resources[resource] = 0
-        logger.execute("Zero Resources", "aviso", f"All resources in {self.city_name} were set to 0.")
+        logger.execute("Zero Resources", "aviso", f"All resources in {self.name} were set to 0.")
     def max_resources(self):
         """Intentionally sets all resources to their maximum for testing purposes."""
         for resource in self.resources:
             self.resources[resource] = self.resources_limit[resource]
-        logger.execute("Max Resources", "aviso", f"All resources in {self.city_name} were set to their maximum.")
+        logger.execute("Max Resources", "aviso", f"All resources in {self.name} were set to their maximum.")
 
 class Detector:
     def __init__(self, map, radius = 5):

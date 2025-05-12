@@ -18,7 +18,6 @@ class NodeMap:
     def add_node_coord(self, node: object, x=None, y=None) -> None:
         if len(self.nodes) >= self.grid_size["x"] * self.grid_size["y"]:
             log.error("Map is full. Cannot add more nodes.")
-            return
         
         x_coords = random.randint(0, self.grid_size["x"] - 1) if x is None else x
         y_coords = random.randint(0, self.grid_size["y"] - 1) if y is None else y
@@ -35,7 +34,7 @@ class NodeMap:
     def create_region_object(self, region_object:dict) -> None:
         if len(self.nodes_region_type) >= self.grid_size["x"] * self.grid_size["y"]:
             log.error("Map is full. Cannot add more region objects.")
-            return
+            
         x_coords = random.randint(0, self.grid_size["x"] - 1)
         y_coords = random.randint(0, self.grid_size["y"] - 1)
         
@@ -115,10 +114,8 @@ class NodeMap:
     def create_route(self, node1, node2) -> None:
         if node1 not in self.nodes.values() or node2 not in self.nodes.values():
             log.error("One of the nodes is not in the map.")
-            return
         if not self.check_distance(node1, node2):
             log.error("Distance between nodes is too large.")
-            return
 
         if node1 not in self.nodes_routes:
             self.nodes_routes[node1] = {"Connected Nodes": {}, "Coords": {}}
@@ -146,10 +143,10 @@ class NodeMap:
     def move_artist(self, artist: MartialArtist, new_coords: tuple) -> None:
         if artist not in self.objects.values():
             log.error("Artist not found in the map.")
-            return
+            
         if artist.position == new_coords:
             log.error("Artist is already at the target coordinates.")
-            return
+            
         distance = self.manhattan_distance(artist, self.get_node(new_coords))
         if distance <= 2:
             artist.position = new_coords
