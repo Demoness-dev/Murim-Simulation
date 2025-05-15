@@ -1,14 +1,16 @@
-import random
+from importer import Importer
+from battle_manager import manage_brackets
 from console_writer import log
 from logger import logger
-from martial_artist_definition import MARTIAL_WORLD_LIST, MartialArtist
-from battle_manager import manage_brackets, create_battle_instance
-from globals import SECT_WORLD_LIST, load_json, GLOBAL_BUILD_OBJECTS
+from globals import SECT_WORLD_LIST, load_json, GLOBAL_BUILD_OBJECTS, random
 from copy import deepcopy
-from build import Building
+
+importer = Importer()
+
+MartialArtist = importer.class_importer("martial_artist_definition", "MartialArtist")
 
 class Sect:
-    def __init__(self, map, trade_system, sect_leader:MartialArtist = None, sect_members:dict = None):
+    def __init__(self, map, trade_system, sect_leader = None, sect_members:dict = None):
         self.map = map
         self.coords = None
         self.nearby_nodes = {}
@@ -19,11 +21,11 @@ class Sect:
         self.sect_members = sect_members if sect_members else {}
         if sect_leader and sect_leader.name not in self.sect_members:
             self.sect_members[sect_leader.name] = {"object": sect_leader, "rank": "Sect Leader"}
-        self.resources = {"Spirit Stones": 2000, "Cultivation Supply": 500, "Normal Supply": 2000}
-        self.resources_limit = {"Spirit Stones": 2000, "Cultivation Supply": 500, "Normal Supply": 2000}
+        self.resources = {"Spirit Stones": 2000, "Cultivation Supply": 500, "Building Supply": 2000}
+        self.resources_limit = {"Spirit Stones": 2000, "Cultivation Supply": 500, "Building Supply": 2000}
         self.resource_trigger = {}
-        self.resource_per_unit = {"Spirit Stones": 1, "Cultivation Supply": 3, "Normal Supply": 1}
-        self.incomes = {"Spirit Stones": 500, "Cultivation Supply": 1200, "Normal Supply": 300}
+        self.resource_per_unit = {"Spirit Stones": 1, "Cultivation Supply": 3, "Building Supply": 1}
+        self.incomes = {"Spirit Stones": 500, "Cultivation Supply": 1200, "Building Supply": 300}
         self.build_slot = {}
         self.build_buffs = {"train_facility_quality": 1}
         self.relations = {}
@@ -60,10 +62,10 @@ class Sect:
         self.sect_leader = winner
         self.sect_members[winner.name]["rank"] = "Sect Leader"
             
-    def assimilate_build(self, build:Building):
+    def assimilate_build(self, build):
         self.build_slot[build.name] = build
     
-    def remove_build(self, build:Building):
+    def remove_build(self, build):
         del self.build_slot[build.name]
     
     def remove_resources(self, amount, resource):
@@ -78,11 +80,11 @@ class Sect:
         self.assimilate_build(burner_copy)
         self.assimilate_build(burner_copy1)
         
-    def add_income(self, build:Building):
+    def add_income(self, build):
         self.incomes.setdefault(build.income_t, 0)
         self.incomes[build.income_t] += build.income_q
         
-    def remove_income(self, build:Building):
+    def remove_income(self, build):
         if build.income_t in self.incomes:
             self.incomes[build.income_t] -= build.income_q
              
@@ -108,10 +110,10 @@ class Sect:
     def has_built(self, build_name:str) -> bool:
         return True if build_name in self.build_slot.keys() else False
     
-    def check_enough_resource(self, build:Building):
+    def check_enough_resource(self, build):
         return all(self.resources.get(res, 0) >= amount for res, amount in build.cost.items())
     
-    def unbuild(self, build:Building):
+    def unbuild(self, build):
         if build.name not in self.build_slot.keys():
             log.error(f"{self.city_id}({self.name}) tried to delete a object that they don't have. {build}({build.name})")
             return
@@ -119,7 +121,7 @@ class Sect:
         self.add_resource(build.income_t, build.income_q * 0.30)
         self.remove_income(build)
         
-    def build(self, build:Building):
+    def build(self, build):
         if build.settle_type != "Sect":
             log.error(f"{build}({build.name}) is not a Settlement of the same type as the original object.")
             return

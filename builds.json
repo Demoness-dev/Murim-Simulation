@@ -21,7 +21,7 @@
         "Region Needs": "Steel",
         "Build Needs": ["Wood Workshop", "Steel Mines", "Town Hall"],
         "Settlement Type": "City",
-        "Build Cost": {"Spirit Stones": 200, "Normal Supply": 800},
+        "Build Cost": {"Spirit Stones": 200, "Building Supply": 800},
         "Current Level": 1,
         "Build Effects": "None"
     },
@@ -34,7 +34,7 @@
         "Region Needs": "0",
         "Build Needs": ["Town Hall"],
         "Settlement Type": "City",
-        "Build Cost": {"Spirit Stones":1,"Normal Supply":1},
+        "Build Cost": {"Spirit Stones":1,"Building Supply":1},
         "Current Level": 1,
         "Build Effects": "None"
     },
@@ -60,7 +60,7 @@
         "Region Needs": "None",
         "Build Needs": ["Town Hall"],
         "Settlement Type": "City",
-        "Build Cost": {"Spirit Stones": 200, "Normal Supply": 800},
+        "Build Cost": {"Spirit Stones": 200, "Building Supply": 800},
         "Current Level": 1,
         "Build Effects": "None"
     },

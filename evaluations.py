@@ -1,4 +1,4 @@
-from globals import *
+from globals import random, resources_weight, find_entry
 from techniques import DefenseTechnique, AttackTechnique, SupportTechnique
 def tech_evaluator(params:dict, orientation:str, caster, attack_data:dict = None):
     
@@ -68,3 +68,4 @@ def decide_battle_rules(battle):
         return battle.battle_regulations
     else:
         return battle.battle_regulations
+

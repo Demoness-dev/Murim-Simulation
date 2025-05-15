@@ -1,10 +1,8 @@
-from sect import Sect
-from martial_artist_definition import MartialArtist
 from battle_manager import manage_brackets
 import uuid
 from console_writer import log
 class sect_battle:
-    def __init__(self, sect1:Sect, sect2:Sect):
+    def __init__(self, sect1, sect2):
         self.Battle_id = uuid.uuid4() 
         self.sect1 = sect1
         self.sect2 = sect2
@@ -34,7 +32,7 @@ class sect_battle:
             self.write_battle_winner(battle)
             
             
-    def write_battle_winner(self, battle_result:MartialArtist):
+    def write_battle_winner(self, battle_result):
         self.battle_log[battle_result.name] = {"Sect Winner": battle_result.sect, "Artist": battle_result}
     
     def finish_battle(self):

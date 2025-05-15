@@ -77,17 +77,31 @@ def correct_win_loss(winner, loser):
     loser.losses += 1
     return
 
+def pairwise(iterable, step=2):
+    items = list(iterable)
+    for i in range(0, len(items), step):
+        yield items[i:i+step]
+
+
+def find_entry(value:str, nested_dict:dict):
+    for c in nested_dict.values():
+        if value in c:
+            return c[value]
+    return None
+
 ONGOING_BATTLES = {}
 MARTIAL_WORLD_LIST = {}
 SECT_WORLD_LIST = {}
 SECT_BATTLE_LIST = {}
 GLOBAL_BATTLE_LOG = {}
+DONE_TRADES = {}
 cities = {}
 BUILD_SLOTS_DICT = load_json()
 GLOBAL_BUILD_OBJECTS = {}
 regions = load_json(filename="regions.json")
 techniques = load_json(filename="techniques.json")
 items = load_json(filename="items.json")
+resources_weight = load_json(filename="resources.json")
 value_backups = {}
 techniques_objects = {}
 global_effect_manager = effect_manager.EffectManager()

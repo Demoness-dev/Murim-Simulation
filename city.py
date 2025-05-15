@@ -1,10 +1,12 @@
-from globals import cities, random, MARTIAL_WORLD_LIST, uuid, GLOBAL_BUILD_OBJECTS
+from globals import cities, random, MARTIAL_WORLD_LIST, uuid, GLOBAL_BUILD_OBJECTS, pairwise, resources_weight, find_entry
 from console_writer import log
 from logger import logger
 from build import Building
 from copy import deepcopy
+from trade_system import TradeSystem
+from evaluations import resource_evaluation
 class City:
-    def __init__(self, region, trade_system, city_name = None):
+    def __init__(self, region, trade_system:TradeSystem, city_name = None):
         self.city_id = uuid.uuid4()
         self.trade_system = trade_system
         self.nearby_nodes = {}
@@ -12,13 +14,13 @@ class City:
         self.region = region
         self.coords = None
         self.name = city_name if city_name else self.generate_city_name()
-        self.resources = {"Spirit Stones": min(30000, random.randint(10000, 30000)), "Cultivation Supply": min(2000, random.randint(1500, 2500)), "Normal Supply": min(28000, random.randint(12000, 30000))}
-        self.resources_limit = {"Spirit Stones": 30000, "Cultivation Supply": 2000, "Normal Supply": 30000}
+        self.resources = {"Spirit Stones": min(30000, random.randint(10000, 30000)), "Cultivation Supply": min(2000, random.randint(1500, 2500)), "Building Supply": min(28000, random.randint(12000, 30000))}
+        self.resources_limit = {"Spirit Stones": 30000, "Cultivation Supply": 2000, "Building Supply": 30000}
         self.resource_trigger = {}
-        self.resource_per_unit = {"Spirit Stones": 1, "Cultivation Supply": 3, "Normal Supply": 1}
+        self.prices = {"Spirit Stones": 1, "Cultivation Supply": 3, "Building Supply": 1}
         self.build_slot = {}
         self.prosperity_rate = random.uniform(1,2)
-        self.incomes = {"Spirit Stones": 500, "Cultivation Supply": 150, "Normal Supply": 1000}
+        self.incomes = {"Spirit Stones": 500, "Cultivation Supply": 150, "Building Supply": 1000}
         self.market_inventory = []
         cities[self.city_id] = {"city": self, "region": self.region}
         self.generate_hall()
@@ -36,8 +38,17 @@ class City:
         self.resources[resource] = max(0, (self.resources[resource] - amount))
 
     def add_resource(self, resource, amount):
+        self.add_new_resource(resource, amount)
         self.resources[resource] = min(self.resources_limit[resource], (self.resources[resource] + amount))
     
+    def add_new_resource(self, resource, amount=1000):
+        if resource not in self.resources.keys():
+            self.resources[resource] = amount
+            self.resources_limit[resource] = amount * 3
+            self.prices[resource] = 1
+        else:
+            return
+
     def generate_hall(self):
         burner_copy = deepcopy(GLOBAL_BUILD_OBJECTS["Town Hall"])
         self.assimilate_build(burner_copy)
@@ -53,12 +64,41 @@ class City:
     def resource_trigger_check(self, resource):
         return True if self.resources[resource] <= self.resources_limit[resource] * 0.10 else False
     
-    def resource_trigger_manager(self, resource):
-        pass #End Trade System First
+    def decide_needed_amount(self, desired_resource, offered_resource):
+        current = self.resources.get(desired_resource, 0)
+        cap = self.resources_limit.get(desired_resource, 1)
+        offered_amount_available = self.resources.get(offered_resource, 0)
+
+        ratio = current / cap
+        if ratio >= 0.95:
+            return 0, 0
+
+        needed = cap - current
+
+        wR = find_entry(desired_resource, resources_weight) or 1
+        wO = find_entry(offered_resource, resources_weight) or 1
+
+        qR = needed
+        qO_required = int((qR * wR) / wO)
+
+        if qO_required <= offered_amount_available:
+            return qR, qO_required
+        else:
+            max_qR = int((offered_amount_available * wO) / wR)
+            return max_qR, offered_amount_available
     
+    def resource_trigger_manager(self, resource):
+        highest_resource = max(self.resources, key=lambda x: self.resources[x])
+        if resource == highest_resource:
+            return
+        desired_amount, offered_amount = self.decide_needed_amount(resource, highest_resource)
+        if desired_amount <= 0:
+            return
+        self.trade_system.register_trade(self, highest_resource, offered_amount, desired_amount, resource)
+
     def resource_manager(self):
         for income_type, income_values in self.incomes.items():
-            self.resources[income_type] += income_values
+            self.add_resource(income_type, income_values)
             if self.check_cap(income_type):
                 self.resources[income_type] = self.resources_limit[income_type]
             if self.resource_trigger_check(income_type):
@@ -89,6 +129,11 @@ class City:
     
     def check_enough_resource(self, build:Building):
         return all(self.resources.get(res, 0) >= amount for res, amount in build.cost.items())
+    
+    def update_prices(self):
+        for resource, price in self.prices.items():
+            demand_factor = 1 - (self.resources[resource] / self.resources_limit[resource])
+            self.prices[resource] = round(self.prices[resource] * (1 + demand_factor * 0.5), 2)
     
     def unbuild(self, build:Building):
         if build.name not in self.build_slot.keys():
