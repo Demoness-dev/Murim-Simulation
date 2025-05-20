@@ -1,6 +1,6 @@
-from globals import *
-from evaluations import tech_evaluator, tech_picker, decide_battle_rules
-from techniques import AttackTechnique, DefenseTechnique, SupportTechnique
+from core.globals import *
+from battle_src.evaluations import tech_evaluator, tech_picker, decide_battle_rules
+from core.techniques import AttackTechnique, DefenseTechnique, SupportTechnique
 import bisect
 class Battle():
     def __init__(self, object1, object2, battle_regulations = None): #Only use battle_regulations in class-calling for pre-setting Training.

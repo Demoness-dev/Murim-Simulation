@@ -1,6 +1,6 @@
-from battle_manager import manage_brackets
+from battle_src.battle_manager import manage_brackets
 import uuid
-from console_writer import log
+from utils.console_writer import log
 class sect_battle:
     def __init__(self, sect1, sect2):
         self.Battle_id = uuid.uuid4() 

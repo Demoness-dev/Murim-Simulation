@@ -1,19 +1,20 @@
-from logger import logger
-from console_writer import log
+from utils.logger import logger
+from utils.console_writer import log
 import json
 import math
 import random
 import gc
-import effect_manager
+import battle_src.effect_manager as effect_manager
 import time
 import uuid
+import os
 
-def load_json(filename="builds.json"):
+def load_json(filename="./json/builds.json"):
     try:
         with open(filename, "r", encoding="utf-8") as file:
             return json.load(file)
     except (FileNotFoundError, json.JSONDecodeError):
-        logger.execute("Error in Json Decoding", "aviso", "Failed to load or parse the JSON file.")
+        logger.execute("Error in Json Decoding", "aviso", f"Failed to load or parse the JSON file. - Filename: {filename}")
         return {}
 
 
@@ -89,6 +90,13 @@ def find_entry(value:str, nested_dict:dict):
             return c[value]
     return None
 
+def search_dict(root_dir):
+    for item in os.listdir(root_dir):
+        item_path = os.path.join(root_dir, item)
+        if os.path.isdir(item_path):
+            logger.execute(f"{item_path}", "sucesso", f"Directory Found {item_path}")
+            search_dict(item_path)
+
 ONGOING_BATTLES = {}
 MARTIAL_WORLD_LIST = {}
 SECT_WORLD_LIST = {}
@@ -98,10 +106,10 @@ DONE_TRADES = {}
 cities = {}
 BUILD_SLOTS_DICT = load_json()
 GLOBAL_BUILD_OBJECTS = {}
-regions = load_json(filename="regions.json")
-techniques = load_json(filename="techniques.json")
-items = load_json(filename="items.json")
-resources_weight = load_json(filename="resources.json")
+regions = load_json(filename="./json/regions.json")
+techniques = load_json(filename="./json/techniques.json")
+items = load_json(filename="./json/items.json")
+resources_weight = load_json(filename="./json/resources.json")
 value_backups = {}
 techniques_objects = {}
 global_effect_manager = effect_manager.EffectManager()

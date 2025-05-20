@@ -1,10 +1,9 @@
-from globals import cities, random, MARTIAL_WORLD_LIST, uuid, GLOBAL_BUILD_OBJECTS, pairwise, resources_weight, find_entry
-from console_writer import log
-from logger import logger
-from build import Building
+from core.globals import cities, random, MARTIAL_WORLD_LIST, uuid, GLOBAL_BUILD_OBJECTS, pairwise, resources_weight, find_entry
+from utils.console_writer import log
+from utils.logger import logger
+from core.build import Building
 from copy import deepcopy
-from trade_system import TradeSystem
-from evaluations import resource_evaluation
+from core.trade_system import TradeSystem
 class City:
     def __init__(self, region, trade_system:TradeSystem, city_name = None):
         self.city_id = uuid.uuid4()

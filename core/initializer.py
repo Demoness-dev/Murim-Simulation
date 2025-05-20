@@ -1,6 +1,6 @@
-from techniques import *
-from globals import *
-from build import Building
+from core.techniques import *
+from core.globals import *
+from core.build import Building
 def load_techniques():
     logger.execute("Loading Techniques", "aviso", "Loading the technique interpreter.")
     technique_interpreter()
@@ -29,8 +29,6 @@ loading_recs = {
     "techniques": load_techniques,
     "buildings": build_dict_unloader
 }
-
-
 
 def full_load():
     for loading_keys, loading_values in loading_recs.items():

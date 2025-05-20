@@ -1,5 +1,5 @@
 import importlib
-from logger import logger
+from utils.logger import logger
 class Importer:
     def import_module(self, module):
         try:

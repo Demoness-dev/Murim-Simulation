@@ -1,5 +1,5 @@
-from globals import random, resources_weight, find_entry
-from techniques import DefenseTechnique, AttackTechnique, SupportTechnique
+from core.globals import random, resources_weight, find_entry
+from core.techniques import DefenseTechnique, AttackTechnique, SupportTechnique
 def tech_evaluator(params:dict, orientation:str, caster, attack_data:dict = None):
     
     def attack_eval(params:dict, weight):

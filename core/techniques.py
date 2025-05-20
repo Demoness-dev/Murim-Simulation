@@ -1,4 +1,4 @@
-from globals import *
+from core.globals import *
 
 def technique_interpreter():
     

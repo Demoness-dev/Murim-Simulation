@@ -1,13 +1,13 @@
-from importer import Importer
-from battle_manager import manage_brackets
-from console_writer import log
-from logger import logger
-from globals import SECT_WORLD_LIST, load_json, GLOBAL_BUILD_OBJECTS, random
+from utils.importer import Importer
+from battle_src.battle_manager import manage_brackets
+from utils.console_writer import log
+from utils.logger import logger
+from core.globals import SECT_WORLD_LIST, load_json, GLOBAL_BUILD_OBJECTS, random
 from copy import deepcopy
 
 importer = Importer()
 
-MartialArtist = importer.class_importer("martial_artist_definition", "MartialArtist")
+MartialArtist = importer.class_importer("core.martial_artist_definition", "MartialArtist")
 
 class Sect:
     def __init__(self, map, trade_system, sect_leader = None, sect_members:dict = None):

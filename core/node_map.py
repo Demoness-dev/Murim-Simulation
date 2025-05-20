@@ -1,9 +1,9 @@
-from sect import Sect
-from city import City
-from globals import regions
+from core.sect import Sect
+from core.city import City
+from core.globals import regions
 import random
-from console_writer import log
-from martial_artist_definition import MartialArtist
+from utils.console_writer import log
+from core.martial_artist_definition import MartialArtist
 class NodeMap:
     def __init__(self, name, trade_system, x=10, y=10):
         self.map_name = name

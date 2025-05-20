@@ -4,140 +4,160 @@
       "Description": "Beginner cultivators refine Qi in their bodies.",
       "Qi Requirement": 1000,
       "Talent Treshold": 1,
-      "Age Limit": 100
+      "Age Limit": 100,
+      "Cultivation Level": 1
     },
     "Foundation Establishment": {
       "Multiplier": 1.5,
       "Description": "Establishes a solid foundation for future breakthroughs.",
       "Qi Requirement": 5000,
       "Talent Treshold": 1,
-      "Age Limit": 150
+      "Age Limit": 150,
+      "Cultivation Level": 2
     },
     "Core Formation": {
       "Multiplier": 2.0,
       "Description": "Creates a golden core that acts as a Qi reservoir.",
       "Qi Requirement": 20000,
       "Talent Treshold": 2,
-      "Age Limit": 200
+      "Age Limit": 200,
+      "Cultivation Level": 3
     },
     "Nascent Soul": {
       "Multiplier": 3.0,
       "Description": "Cultivator forms a sentient soul, allowing external Qi control.",
       "Qi Requirement": 40000,
       "Talent Treshold": 2,
-      "Age Limit": 250
+      "Age Limit": 250,
+      "Cultivation Level": 4
     },
     "Spirit Lord": {
       "Multiplier": 4.5,
       "Description": "Becomes one with nature’s Qi, enhancing elemental mastery.",
       "Qi Requirement": 80000,
       "Talent Treshold": 3,
-      "Age Limit": 300
+      "Age Limit": 300,
+      "Cultivation Level": 5
     },
     "Soul Formation": {
       "Multiplier": 6.0,
       "Description": "Refines soul essence, increasing spiritual awareness.",
       "Qi Requirement": 120000,
       "Talent Treshold": 3,
-      "Age Limit": 350
+      "Age Limit": 350,
+      "Cultivation Level": 6
     },
     "Spirit King": {
       "Multiplier": 8.0,
       "Description": "Controls Qi externally and internally at will.",
       "Qi Requirement": 180000,
       "Talent Treshold": 4,
-      "Age Limit": 400
+      "Age Limit": 400,
+      "Cultivation Level": 7
     },
     "Heaven Ascension": {
       "Multiplier": 10.0,
       "Description": "Ascends to a higher plane, breaking mortal limits.",
       "Qi Requirement": 250000,
       "Talent Treshold": 4,
-      "Age Limit": 450
+      "Age Limit": 450,
+      "Cultivation Level": 8
     },
     "Immortal Awakening": {
       "Multiplier": 15.0,
       "Description": "A cultivator awakens divine senses, gaining immortality.",
       "Qi Requirement": 300000,
       "Talent Treshold": 5,
-      "Age Limit": 500
+      "Age Limit": 500,
+      "Cultivation Level": 9
     },
     "Celestial Emperor": {
       "Multiplier": 20.0,
       "Description": "Ruler of celestial beings, able to reshape reality.",
       "Qi Requirement": 400000,
       "Talent Treshold": 5,
-      "Age Limit": 550
+      "Age Limit": 550,
+      "Cultivation Level": 10
     },
     "Void Shatterer": {
       "Multiplier": 25.0,
       "Description": "Able to tear through space and time with sheer will.",
       "Qi Requirement": 500000,
       "Talent Treshold": 6,
-      "Age Limit": 600
+      "Age Limit": 600,
+      "Cultivation Level": 11
     },
     "Divine Transcendent": {
       "Multiplier": 30.0,
       "Description": "Achieves god-like status, existing beyond mortal understanding.",
       "Qi Requirement": 800000,
       "Talent Treshold": 6,
-      "Age Limit": 650
+      "Age Limit": 650,
+      "Cultivation Level": 12
     },
     "Primordial Deity": {
       "Multiplier": 40.0,
       "Description": "Exists before time itself, embodying creation's essence.",
       "Qi Requirement": 10000000,
       "Talent Treshold": 7,
-      "Age Limit": 700
+      "Age Limit": 700,
+      "Cultivation Level": 13
     },
     "Abyss Monarch": {
       "Multiplier": 50.0,
       "Description": "Can wield and command both light and darkness at will.",
       "Qi Requirement": 3000000,
       "Talent Treshold": 8,
-      "Age Limit": 750
+      "Age Limit": 750,
+      "Cultivation Level": 14
     },
     "Eternal Sovereign": {
       "Multiplier": 60.0,
       "Description": "Completely detached from time, existing in multiple realms.",
       "Qi Requirement": 5000000,
       "Talent Treshold": 8,
-      "Age Limit": 800
+      "Age Limit": 800,
+      "Cultivation Level": 15
     },
     "Omniversal Ruler": {
       "Multiplier": 80.0,
       "Description": "Oversees infinite dimensions, controlling existence itself.",
       "Qi Requirement": 8000000,
       "Talent Treshold": 8,
-      "Age Limit": 850
+      "Age Limit": 850,
+      "Cultivation Level": 16
     },
     "True God": {
       "Multiplier": 100.0,
       "Description": "Surpasses all known limitations, becoming an entity of pure will.",
       "Qi Requirement": 12000000,
       "Talent Treshold": 8,
-      "Age Limit": 900
+      "Age Limit": 900,
+      "Cultivation Level": 17
     },
     "Elder Creator": {
       "Multiplier": 150.0,
       "Description": "Can create and destroy universes with a mere thought.",
       "Qi Requirement": 15000000,
       "Talent Treshold": 8,
-      "Age Limit": 1000
+      "Age Limit": 1000,
+      "Cultivation Level": 18
     },
     "Supreme Void": {
       "Multiplier": 200.0,
       "Description": "Becomes the void itself, existing beyond all concepts.",
       "Qi Requirement": 30000000,
       "Talent Treshold": 8,
-      "Age Limit": 2000
+      "Age Limit": 2000,
+      "Cultivation Level": 19
     },
     "Final Existence": {
       "Multiplier": 500.0,
       "Description": "The last step before true omnipotence, beyond comprehension.",
       "Qi Requirement": 50000000,
       "Talent Treshold": 8,
-      "Age Limit": 3000
+      "Age Limit": 3000,
+      "Cultivation Level": 20
     }
   }
   

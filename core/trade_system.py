@@ -1,6 +1,6 @@
 import uuid
-from globals import DONE_TRADES
-from logger import logger
+from core.globals import DONE_TRADES
+from utils.logger import logger
 
 
 class TradeSystem:
@@ -42,10 +42,8 @@ class TradeSystem:
         offered = trade["resource"]
         amount = trade["desired amount"]
 
-
         if buyer_city.resources.get(desired, 0) < amount:
             return False
-
 
         if not buyer_city.resource_trigger_check(offered):
             return False

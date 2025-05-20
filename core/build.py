@@ -1,4 +1,4 @@
-from globals import GLOBAL_BUILD_OBJECTS
+from core.globals import GLOBAL_BUILD_OBJECTS
 
 
 class Building:

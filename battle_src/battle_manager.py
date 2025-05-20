@@ -1,8 +1,8 @@
-import battle
-from logger import logger
-from console_writer import log
+import core.battle as battle
+from utils.logger import logger
+from utils.console_writer import log
 import time
-from globals import GLOBAL_BATTLE_LOG, uuid
+from core.globals import GLOBAL_BATTLE_LOG, uuid
 
 def create_battle_instance(martial_artist_1, martial_artist_2, battle_regulations=None):
     """

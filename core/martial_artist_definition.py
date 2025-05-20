@@ -1,7 +1,7 @@
-from globals import MARTIAL_WORLD_LIST, techniques, techniques_objects, logger, log, gc, random, json, is_empty_dict
-from evaluations import tech_evaluator, tech_picker
-from techniques import DefenseTechnique, AttackTechnique, SupportTechnique
-
+from core.globals import MARTIAL_WORLD_LIST, techniques, techniques_objects, logger, log, gc, random, json, is_empty_dict
+from battle_src.evaluations import tech_evaluator, tech_picker
+from core.techniques import DefenseTechnique, AttackTechnique, SupportTechnique
+import torch
 class MartialArtist:
     def __init__(self, map, name = None, gender = None, father = None, mother = None, sect = None, starter_techniques = None, cultivation_realm = "Qi Condensation", talent = None):
         self.father = father if father else None
@@ -53,9 +53,6 @@ class MartialArtist:
         self.losses = 0
         
         self.battle_record = {}
-
-        self.inventory = {"Spirit Stones": 3000}
-        self.equipped_items = {"Head": {}, "Weapon": {}, "Armor": {}, "Cape": {}, "Boots": {}, "Gauntlets": {}}
         
         #Battle Oriented Stats
         self.stun = False
@@ -70,8 +67,20 @@ class MartialArtist:
         self.honor = random.randrange(1, 20)
         self.ruthlessness = random.randrange(1, 20)
         self.mercy = random.randrange(1, 20)
+        self.personality = self.personality_create()
         
         
+    
+    def personality_create(self):
+        personality = {
+            "aggression": self.aggression,
+            "strategy": self.strategy,
+            "honor": self.honor,
+            "ruthlessness": self.ruthlessness,
+            "mercy": self.mercy
+        }
+        return personality
+    
     def generate_names(self):
         first_names = [
     "Xiao", "Feng", "Lei", "Long", "Tian", "Bai", "Zhao", "Wei", "Hua", "Shen",  
