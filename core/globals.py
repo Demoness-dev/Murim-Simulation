@@ -8,6 +8,7 @@ import battle_src.effect_manager as effect_manager
 import time
 import uuid
 import os
+from typing import Set
 
 def load_json(filename="./json/builds.json"):
     try:
@@ -82,7 +83,7 @@ def pairwise(iterable, step=2):
     items = list(iterable)
     for i in range(0, len(items), step):
         yield items[i:i+step]
-
+    
 
 def find_entry(value:str, nested_dict:dict):
     for c in nested_dict.values():
@@ -97,6 +98,9 @@ def search_dict(root_dir):
             logger.execute(f"{item_path}", "sucesso", f"Directory Found {item_path}")
             search_dict(item_path)
 
+def search_id(id):
+    return MARTIAL_WORLD_LIST[id] if id in MARTIAL_WORLD_LIST else 0
+
 ONGOING_BATTLES = {}
 MARTIAL_WORLD_LIST = {}
 SECT_WORLD_LIST = {}
@@ -110,6 +114,9 @@ regions = load_json(filename="./json/regions.json")
 techniques = load_json(filename="./json/techniques.json")
 items = load_json(filename="./json/items.json")
 resources_weight = load_json(filename="./json/resources.json")
+realms_JSON = load_json(filename="./json/realms_list.json")
 value_backups = {}
 techniques_objects = {}
 global_effect_manager = effect_manager.EffectManager()
+WORLD_MAP = None
+_USED_IDS: Set[str] = set()

@@ -47,7 +47,7 @@ class Battle():
             kwrite = f"and {winner.name}, {loser.name} trained together."
         if not self._check_alive(loser):
             kwrite = f"and {loser.name} died in battle."
-            del MARTIAL_WORLD_LIST[loser.name]
+            del MARTIAL_WORLD_LIST[loser.id]
             if loser.sect:
                 if loser.sect.sect_leader == loser:
                     loser.sect.choose_new_leader()

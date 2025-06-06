@@ -55,5 +55,5 @@ class sect_battle:
             log.info("The battle ended in a draw. No sect got any territory.")
             return
         log.info(f"The battle ended. The winner is {winner}.")
-        #FIRST REWRITE THE MAP AND TRADE SYSTEM TO BE COMPATIBLE WITH THE SECT WAR SYSTEM.
+        #FIRST REWRITE THE MAP AND TRADE SYSTEM TO BE COMPATIBLE WITH THE SECT WAR SYSTEM
         

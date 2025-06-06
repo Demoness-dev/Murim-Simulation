@@ -166,24 +166,5 @@ class City:
             self.resources[resource] = self.resources_limit[resource]
         logger.execute("Max Resources", "aviso", f"All resources in {self.name} were set to their maximum.")
 
-class Detector:
-    def __init__(self, map, radius = 5):
-        self.map = map
-        self.radius = radius
-        self.artists = MARTIAL_WORLD_LIST
-        
-    def detect_nearby_martial_artists(self, city_name):
-        if city_name not in self.map.cities:
-            logger.execute("Detector Error", "erro", f"The action (detect_nearby_martial_artists) tried to use a city that is not connected on the map dictionary.")
-            return {}
-        
-        city_position = self.map.objects[city_name]
-        nearby_artists = {}
-        
-        for artist in self.artists.values():
-            distance = ((artist.position[0] - city_position[0]) ** 2 + (artist.position[1] - city_position[1]) ** 2) ** 0.5
-            if distance <= self.radius:
-                nearby_artists[artist.name] = {"distance": distance, "realm": artist.cultivation_realm, "object": artist}
-            
-        return nearby_artists
+
 

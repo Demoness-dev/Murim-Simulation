@@ -1,9 +1,10 @@
-from core.globals import MARTIAL_WORLD_LIST, techniques, techniques_objects, logger, log, gc, random, json, is_empty_dict
+from core.globals import MARTIAL_WORLD_LIST, techniques, techniques_objects, logger, log, gc, random, is_empty_dict, WORLD_MAP, realms_JSON, _USED_IDS
 from battle_src.evaluations import tech_evaluator, tech_picker
 from core.techniques import DefenseTechnique, AttackTechnique, SupportTechnique
-import torch
+from radar import Radar
+from uuid import uuid4
 class MartialArtist:
-    def __init__(self, map, name = None, gender = None, father = None, mother = None, sect = None, starter_techniques = None, cultivation_realm = "Qi Condensation", talent = None):
+    def __init__(self, map = WORLD_MAP, name = None, gender = None, father = None, mother = None, sect = None, starter_techniques = None, cultivation_realm = "Qi Condensation", talent = None):
         self.father = father if father else None
         self.mother = mother if mother else None
         self.first_name, self.last_name, self.name  = name if name else self.generate_names()
@@ -14,12 +15,17 @@ class MartialArtist:
         self.realm = self._get_cultivation_realm()
         self.gender = self.sort_gender()
         
+        self.id = self.generate_id()
+        
+        self.radar = Radar(map, self, 2)
+        
         self.strength = 10
         self.charisma = 10
         self.wisdom = 10
         self.dexterity = 10
         self.intelligence = 10
         self.constitution = 10
+        self.stats_average = self.get_stat_avg()
         self._age = 18
         
         self.base_qi = 100
@@ -47,7 +53,7 @@ class MartialArtist:
         self.append_thyself()
         
         self.map = map
-        self.position = self._spawn_random_location()
+        self.coords = self._spawn_random_location()
         
         self.wins = 0
         self.losses = 0
@@ -69,7 +75,33 @@ class MartialArtist:
         self.mercy = random.randrange(1, 20)
         self.personality = self.personality_create()
         
+        self.avg_technique = self.get_avg_tier()
         
+    def generate_id(self):
+        while True:
+            new_id = str(uuid4())
+            if new_id not in _USED_IDS and new_id not in MARTIAL_WORLD_LIST:
+                _USED_IDS.add(new_id)
+                return new_id
+    def get_stat_avg(self):
+        atts = [
+            self.strength,
+            self.constitution,
+            self.wisdom,
+            self.dexterity,
+            self.intelligence,
+            self.charisma
+        ]
+        return sum(atts) / len(atts)
+    
+    def is_leader(self):
+        return True if self.sect.sect_leader == self else False
+    
+    def get_avg_tier(self):
+        total_value = 0
+        for x, z in self.techniques.items():
+            total_value += self.techniques[x]["tier"]
+        return round(total_value / len(self.techniques))
     
     def personality_create(self):
         personality = {
@@ -114,7 +146,7 @@ class MartialArtist:
         sorted_gender = random.randint(1,2)
         return "Male" if sorted_gender == 1 else "Female"
     def append_thyself(self):
-        MARTIAL_WORLD_LIST[self.name] = self
+        MARTIAL_WORLD_LIST[self.id] = self
     def update_qi(self):
         self.qi = self.base_qi * (self.wisdom + self.constitution) * self.realm['Multiplier']
         self.check_cap()
@@ -150,8 +182,8 @@ class MartialArtist:
         return 18 + self.relative_time_passed // 100
     
     def delete(self):
-        if self.name in MARTIAL_WORLD_LIST:
-            del MARTIAL_WORLD_LIST[self.name]
+        if self.id in MARTIAL_WORLD_LIST:
+            del MARTIAL_WORLD_LIST[self.id]
             if self.sect is not None:
                 if self.name in self.sect.members:
                     del self.sect.members[self.name]
@@ -170,21 +202,13 @@ class MartialArtist:
             setattr(self, stat, value)
         else:
             logger.execute("Attribute error", "erro", f"the object {self}({self.name}) tried to define a non existent attribute.")
-    
-    def _load_realms(self, filename="realms_list.json"):
-        try:
-            with open(filename, "r", encoding="utf-8") as file:
-                return json.load(file)
-        except (FileNotFoundError, json.JSONDecodeError):
-            logger.execute("Error in Json Decoding", "aviso", "Failed to load or parse the JSON file.")
-            return {}
-
+            
     def _get_cultivation_realm(self):
-        realms = self._load_realms()
+        realms = realms_JSON
         return realms.get(self.cultivation_realm, None)
 
     def _get_next_cultivation_realm(self):
-        realms = self._load_realms()
+        realms = realms_JSON
         realm_names = list(realms.keys())
         if self.cultivation_realm in realm_names:
             index = realm_names.index(self.cultivation_realm)
@@ -350,14 +374,13 @@ class MartialArtist:
         return None   
     def give_birth(self, debug_mode = False, debug_father = None):
         if debug_mode == True:
-            child = MartialArtist(self.map, father = debug_father, mother=self)
+            self.map.create_martial_artist(father=debug_father, mother=self)
             return
         partner = self.get_lover()
-        if self.gender == "Female":
-            self.pass_time(100)
-            child = MartialArtist(self.map, father = partner, mother = self)
-            log.info(f"{self}({self.name}) and {partner}({partner.name}) successfully gave birth to a child! {child}({child.name})")
-            return
+        self.pass_time(100)
+        child = self.map.create_martial_artist(father=partner, mother=self)
+        log.info(f"{self}({self.name}) and {partner}({partner.name}) successfully gave birth to a child! {child}({child.name})")
+        return
         
     def get_tech_group(self, orientation):
         possible_techs = {}

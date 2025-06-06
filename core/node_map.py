@@ -1,11 +1,11 @@
 from core.sect import Sect
 from core.city import City
-from core.globals import regions
+from core.globals import regions, WORLD_MAP, MARTIAL_WORLD_LIST
 import random
 from utils.console_writer import log
 from core.martial_artist_definition import MartialArtist
 class NodeMap:
-    def __init__(self, name, trade_system, x=10, y=10):
+    def __init__(self, name, trade_system = None, x=10, y=10):
         self.map_name = name
         self.nodes = {}
         self.nodes_region_type = {} #Each node will have a region modifier anexed with its coord.
@@ -14,7 +14,11 @@ class NodeMap:
         self.trade_system = trade_system
         self.objects = {}
         self.regions = regions
-
+        self.wmp()
+        
+    def wmp(self):
+        WORLD_MAP = self
+    
     def add_node_coord(self, node: object, x=None, y=None) -> None:
         if len(self.nodes) >= self.grid_size["x"] * self.grid_size["y"]:
             log.error("Map is full. Cannot add more nodes.")
@@ -54,17 +58,17 @@ class NodeMap:
         new_sect.nearby_nodes = self.check_nearby_nodes(new_sect)
         log.info(f"Sect {new_sect.sect_name} created at coordinates ({new_sect.coords[0]}, {new_sect.coords[1]})")
 
-    def create_martial_artist(self, sect=None, coords:tuple = None) -> None:
-        new_artist = MartialArtist(self, self.trade_system, sect)
-        new_artist.position = coords if coords else self.generate_martial_coords()
-        log.info(f"Custom martial artist {new_artist}({new_artist.name}) created at {new_artist.position}")
+    def create_martial_artist(self, sect=None, coords:tuple = None, father=None, mother=None) -> None:
+        new_artist = MartialArtist(self, sect=sect)
+        new_artist.coords = coords if coords else self.generate_martial_coords()
+        self.objects[new_artist.id] = new_artist.coords
+        log.info(f"Custom martial artist {new_artist}({new_artist.name}) created at {new_artist.coords}")
         
     def generate_martial_coords(self, sect:Sect = None) -> tuple:
         if sect and sect in self.nodes.values():
             return sect.coords
         if sect not in self.nodes.values():
-            log.error(f"Sect {sect.city_name} is not on the map and is trying to generate a martial artist.")
-            return
+            log.error(f"Sect {sect.city_name if sect else "None"} is not on the map and is trying to generate a martial artist. Using Default Coords")
         if sect == None:
             x_coords = random.randint(0, self.grid_size["x"] - 1)
             y_coords = random.randint(0, self.grid_size["y"] - 1)
