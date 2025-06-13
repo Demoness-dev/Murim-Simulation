@@ -22,3 +22,4 @@ class Radar:
     
     def purge_nodes(self):
         return self.nodes.clear()
+

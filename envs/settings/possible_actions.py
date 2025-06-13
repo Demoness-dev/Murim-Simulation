@@ -11,3 +11,12 @@ ACTIONS = [
     "learn_technique",
     "move",             #Generic Action
 ]
+
+
+MOVE_ACTIONS = {
+    0: "up",
+    1: "down",
+    2: "left",
+    3: "right",
+    4: "stay"
+}

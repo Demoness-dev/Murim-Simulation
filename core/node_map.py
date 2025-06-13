@@ -145,7 +145,7 @@ class NodeMap:
             return self.nodes[coords]
         else:
             log.error(f"Node at coordinates {coords} does not exist.")
-            return (1, 1)
+            return None
 
     def move_artist(self, artist: MartialArtist, new_coords: tuple) -> None:
         if artist not in self.objects.values():
@@ -165,3 +165,8 @@ class NodeMap:
             x_coords = random.randint(0, self.grid_size["x"] - 1)
             y_coords = random.randint(0, self.grid_size["y"] - 1)
         return (x_coords, y_coords)
+    
+    def find_node_type(self, coords:tuple):
+        obj = self.get_node(coords)
+        return obj.type if obj else None
+            

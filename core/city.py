@@ -12,6 +12,7 @@ class City:
         self.nearby_artists = {}
         self.region = region
         self.coords = None
+        self.type = "City"
         self.name = city_name if city_name else self.generate_city_name()
         self.resources = {"Spirit Stones": min(30000, random.randint(10000, 30000)), "Cultivation Supply": min(2000, random.randint(1500, 2500)), "Building Supply": min(28000, random.randint(12000, 30000))}
         self.resources_limit = {"Spirit Stones": 30000, "Cultivation Supply": 2000, "Building Supply": 30000}

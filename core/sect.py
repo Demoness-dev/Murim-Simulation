@@ -15,6 +15,7 @@ class Sect:
         self.coords = None
         self.nearby_nodes = {}
         self.nearby_artists = {}
+        self.type = "Sect"
         self.city_name = self.generate_city_name()
         self.sect_leader = sect_leader if sect_leader else self.generate_random_sect_leader()
         self.trade_system = trade_system

@@ -17,7 +17,7 @@ class MartialArtist:
         self.cultivation_realm = cultivation_realm
         self.realm = self._get_cultivation_realm()
         self.gender = self.sort_gender()
-        
+        self.type = "artist"
         self.id = self.generate_id()
         
         self.radar = Radar(map, self, 2)
@@ -81,8 +81,6 @@ class MartialArtist:
         
         self.avg_technique = self.get_avg_tier()
         
-        self.prowess = self.calculate_prowess()
-        
         
     def generate_id(self):
         while True:
@@ -90,9 +88,6 @@ class MartialArtist:
             if new_id not in _USED_IDS and new_id not in MARTIAL_WORLD_LIST:
                 _USED_IDS.add(new_id)
                 return new_id
-    
-    def calculate_prowess(self):
-        pass
     
     def get_stat_avg(self):
         atts = [

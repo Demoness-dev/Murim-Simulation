@@ -120,3 +120,4 @@ techniques_objects = {}
 global_effect_manager = effect_manager.EffectManager()
 WORLD_MAP = None
 _USED_IDS: Set[str] = set()
+NODE_TYPES = ["city", "sect"]
