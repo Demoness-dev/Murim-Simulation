@@ -1,9 +1,0 @@
- 
-[2025-06-04 11:18:00] : [ERROR] - Sect None is not on the map and is trying to generate a martial artist. Using Default Coords
-[2025-06-04 11:18:00] : [INFO] - Custom martial artist <core.martial_artist_definition.MartialArtist object at 0x0000020FFA519940>(Feng Chen) created at (7, 3)
-[2025-06-04 11:18:00] : [ERROR] - Sect None is not on the map and is trying to generate a martial artist. Using Default Coords
-[2025-06-04 11:18:00] : [INFO] - Custom martial artist <core.martial_artist_definition.MartialArtist object at 0x0000020FFA555950>(Lian Xue) created at (6, 4)
-[2025-06-04 11:40:44] : [ERROR] - Sect None is not on the map and is trying to generate a martial artist. Using Default Coords
-[2025-06-04 11:40:44] : [INFO] - Custom martial artist <core.martial_artist_definition.MartialArtist object at 0x0000022146B4D940>(Wei Rui) created at (1, 6)
-[2025-06-04 11:40:44] : [ERROR] - Sect None is not on the map and is trying to generate a martial artist. Using Default Coords
-[2025-06-04 11:40:44] : [INFO] - Custom martial artist <core.martial_artist_definition.MartialArtist object at 0x0000022146C35950>(Heng Rou) created at (5, 7)
