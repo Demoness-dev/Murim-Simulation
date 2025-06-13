@@ -8,8 +8,6 @@ from settings.env_generic_functions import _STATE_SIZE, get_artist_vector
 from utils.logger import logger
 from core.martial_artist_definition import MartialArtist
 
-
-
 class ArtistEnv(Env):
     def __init__(self, artist_id):
         super().__init__()
@@ -70,8 +68,8 @@ class ArtistEnv(Env):
                     if stat_gain > 0:
                         reward += stat_gain * 3 + 0.1
                     else:
-                        reward -= 0.2
-                    
+                        reward -= 0.2 
+                    #AS AVERAGES JA ESTÃO PRONTAS APENAS FAÇA O SISTEMA DE REWARD COMPARANDO AS MÉDIAS GLOBAIS.
                 case "rest":
                     pass
                 case "learn_technique":

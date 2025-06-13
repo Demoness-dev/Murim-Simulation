@@ -3,6 +3,9 @@ from battle_src.evaluations import tech_evaluator, tech_picker
 from core.techniques import DefenseTechnique, AttackTechnique, SupportTechnique
 from radar import Radar
 from uuid import uuid4
+from utils.max_values import TALENT_MAX_VALUE
+
+
 class MartialArtist:
     def __init__(self, map = WORLD_MAP, name = None, gender = None, father = None, mother = None, sect = None, starter_techniques = None, cultivation_realm = "Qi Condensation", talent = None):
         self.father = father if father else None
@@ -33,10 +36,11 @@ class MartialArtist:
         
         if isinstance(self.realm, dict) and 'Multiplier' in self.realm:
             self.qi = self.base_qi * (self.wisdom + self.constitution) * self.realm['Multiplier']
+            self.vitality = self.base_vitality * self.constitution * self.realm['Multiplier']
         else:
             logger.execute("Dictionary Error", "erro", "'Realm' dict doens't have any data.")
             self.qi = 100
-        self.vitality = self.base_vitality * self.constitution * self.realm['Multiplier']
+            self.vitality = 100
 
         self.max_qi = self.qi
         self.max_vitality = self.vitality
@@ -77,12 +81,19 @@ class MartialArtist:
         
         self.avg_technique = self.get_avg_tier()
         
+        self.prowess = self.calculate_prowess()
+        
+        
     def generate_id(self):
         while True:
             new_id = str(uuid4())
             if new_id not in _USED_IDS and new_id not in MARTIAL_WORLD_LIST:
                 _USED_IDS.add(new_id)
                 return new_id
+    
+    def calculate_prowess(self):
+        pass
+    
     def get_stat_avg(self):
         atts = [
             self.strength,
@@ -224,7 +235,7 @@ class MartialArtist:
 
         talent += father_talent + mother_talent // 2
 
-        return round(min(8, talent))
+        return round(min(TALENT_MAX_VALUE, talent))
 
     def recover(self, facility_quality = None, duration = 1):
         fc_level = facility_quality if facility_quality else 1
@@ -274,7 +285,7 @@ class MartialArtist:
         self.check_for_breakthrough()
         self.pass_time(duration)
 
-    def learn_technique(self, technique):
+    def learn_technique(self, technique): #REPARAR E MELHORAR ESTE CODIGO
         learn_rate = max(1, self.talent * self.wisdom / 100)
         duration_prediction = technique["Learn Difficulty"] / learn_rate
         if duration_prediction > 100:
@@ -311,6 +322,7 @@ class MartialArtist:
     def die(self, cause="Unknown"):
         log.info(f"{self}({self.name}) died. [Cause of Death: {cause}]")
         self.delete()
+        
     def has_lover(self):
         return any(rel["deepness"] == "lover" for rel in self.relations.values())
     def has_relations(self, target):
