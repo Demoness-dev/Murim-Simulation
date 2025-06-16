@@ -4,10 +4,11 @@ import numpy as np
 from random import uniform
 from envs.settings.possible_actions import ACTIONS, MOVE_ACTIONS
 from core.globals import search_id, WORLD_MAP
-from settings.env_generic_functions import _STATE_SIZE, get_artist_vector, attribute_ids
+from envs.settings.vectors import _STATE_SIZE, get_artist_vector, attribute_ids
 from core.node_map import NodeMap
 from utils.logger import logger
 from core.martial_artist_definition import MartialArtist
+from settings.counter import START_RADAR, END_RADAR, START_REL_POS, END_REL_POS, MAX_OBJECTS
 class ArtistEnv(Env):
     def __init__(self, artist_id):
         super().__init__()
@@ -37,6 +38,8 @@ class ArtistEnv(Env):
             current_state = get_artist_vector(self.artist, self.map)
             reward = 0.0
             done = False
+            radar_counts = current_state[START_RADAR:END_RADAR]
+            rel_pos = current_state[START_REL_POS:END_REL_POS].reshape((MAX_OBJECTS, 3))
             
             match action_name:
                 case "cultivate":

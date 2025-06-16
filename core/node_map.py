@@ -14,10 +14,9 @@ class NodeMap:
         self.trade_system = trade_system
         self.objects = {}
         self.regions = regions
-        self.wmp()
-        
-    def wmp(self):
+        global WORLD_MAP
         WORLD_MAP = self
+        
     
     def add_node_coord(self, node: object, x=None, y=None) -> None:
         if len(self.nodes) >= self.grid_size["x"] * self.grid_size["y"]:
